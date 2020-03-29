@@ -1,11 +1,11 @@
 {
-    "title": "One Page Wonder",
-    "name": "startbootstrap-one-page-wonder",
-    "version": "5.0.7",
+    "title": "Business Casual",
+    "name": "startbootstrap-business-casual",
+    "version": "5.0.9",
     "scripts": {
         "start": "node_modules/.bin/gulp watch"
     },
-    "description": "A one page HTML template built with Bootstrap",
+    "description": "A casual HTML website theme for businesses built with Bootstrap",
     "keywords": [
         "css",
         "sass",
@@ -14,9 +14,9 @@
         "theme",
         "template"
     ],
-    "homepage": "https://startbootstrap.com/template-overviews/one-page-wonder",
+    "homepage": "https://startbootstrap.com/template-overviews/business-casual",
     "bugs": {
-        "url": "https://github.com/BlackrockDigital/startbootstrap-one-page-wonder/issues",
+        "url": "https://github.com/BlackrockDigital/startbootstrap-business-casual/issues",
         "email": "feedback@startbootstrap.com"
     },
     "license": "MIT",
@@ -26,7 +26,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/BlackrockDigital/startbootstrap-one-page-wonder.git"
+        "url": "https://github.com/BlackrockDigital/startbootstrap-business-casual.git"
     },
     "dependencies": {
         "bootstrap": "4.3.1",
