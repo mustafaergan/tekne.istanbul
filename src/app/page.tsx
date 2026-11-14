@@ -4,6 +4,7 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { CallbackForm } from "@/components/BookingPanel";
 import { site, waLink } from "@/lib/site";
 import { WaIcon } from "@/components/Icon";
+import { Gulls, Skyline } from "@/components/Skyline";
 
 export default function Home() {
   const rent = services.filter((s) => s.category !== "bakim");
@@ -11,13 +12,14 @@ export default function Home() {
 
   return (
     <>
-      <section className="waves text-white">
-        <div className="wrap pb-20 pt-32 sm:pb-28 sm:pt-40">
-          <p className="text-sm font-medium uppercase tracking-widest text-sea-100/80">İstanbul Boğazı</p>
+      <section className="waves relative overflow-hidden text-white">
+        <Gulls className="absolute right-[12%] top-24 hidden w-28 text-white/70 sm:block" />
+        <div className="wrap relative pb-6 pt-32 sm:pb-2 sm:pt-40">
+          <p className="text-sm font-medium uppercase tracking-widest text-white/80">İstanbul Boğazı</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight sm:text-6xl">
             Teknenizi seçin, tarihinizi seçin. Gerisini biz halledelim.
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-sea-100/90">
+          <p className="mt-5 max-w-xl text-lg text-white/90">
             Evlilik teklifinden jet skiye, teknede kahvaltıdan gece turuna; tekne bakımı ve usta da bizden.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -29,9 +31,10 @@ export default function Home() {
             </a>
           </div>
         </div>
+        <Skyline />
       </section>
 
-      <section id="hizmetler" className="wrap scroll-mt-6 pt-16">
+      <section id="hizmetler" className="wrap scroll-mt-6 pt-8">
         <h2 className="text-2xl font-bold sm:text-3xl">Kiralama ve özel turlar</h2>
         <p className="mt-2 text-dim">Hizmeti seçin, takvimden gün ve saati işaretleyin. Uygunluğu teyit edip sizi arıyoruz.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -52,7 +55,7 @@ export default function Home() {
       </section>
 
       <section className="wrap pt-16">
-        <div className="grid gap-8 rounded-3xl bg-sea-900 p-6 text-white sm:p-10 lg:grid-cols-2">
+        <div className="grid gap-8 rounded-3xl bg-gradient-to-br from-sea-800 to-sea-700 p-6 text-white sm:p-10 lg:grid-cols-2">
           <div>
             <h2 className="text-2xl font-bold sm:text-3xl">Karar veremediniz mi?</h2>
             <p className="mt-3 text-sea-100/90">

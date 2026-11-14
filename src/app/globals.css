@@ -1,19 +1,27 @@
 @import "tailwindcss";
 
+/* Boğaz mavisi palet */
 :root {
-  --sea-900: #062a3a;
-  --sea-800: #0a3d54;
-  --sea-700: #0f5472;
-  --sea-500: #1b8fb8;
-  --sea-100: #e4f3f8;
-  --sand: #f7f4ee;
-  --ink: #0f1b22;
-  --dim: #55656e;
-  --line: #dde4e7;
+  --sea-900: #04324d;
+  --sea-800: #064a70;
+  --sea-700: #0a6696;
+  --sea-500: #1597c9;
+  --sea-300: #6cc6e6;
+  --sea-100: #e3f4fb;
+  --page: #f3f9fc;
+  --ink: #0c2230;
+  --dim: #4f6878;
+  --line: #d6e6ee;
   --card: #ffffff;
   --accent: #ff7a3d;
-  --ok: #15803d;
+  --ok: #0f8a5f;
   --err: #b91c1c;
+
+  /* siluet katmanları */
+  --sky-far: #3aa6d6;
+  --sky-mid: #127bb2;
+  --sea-wave-1: #0a6aa0;
+  --sea-wave-2: #075a8c;
 }
 
 @theme inline {
@@ -21,8 +29,9 @@
   --color-sea-800: var(--sea-800);
   --color-sea-700: var(--sea-700);
   --color-sea-500: var(--sea-500);
+  --color-sea-300: var(--sea-300);
   --color-sea-100: var(--sea-100);
-  --color-sand: var(--sand);
+  --color-sand: var(--page);
   --color-ink: var(--ink);
   --color-dim: var(--dim);
   --color-line: var(--line);
@@ -37,7 +46,7 @@ html {
 }
 
 body {
-  background: var(--sand);
+  background: var(--page);
   color: var(--ink);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -102,8 +111,39 @@ body {
   border-color: var(--sea-500);
 }
 
+/* Hero: gün ışığında Boğaz gökyüzü → deniz */
 .waves {
   background:
-    radial-gradient(1200px 400px at 80% -10%, color-mix(in srgb, var(--sea-500) 45%, transparent), transparent 60%),
-    linear-gradient(180deg, var(--sea-900), var(--sea-800));
+    radial-gradient(700px 300px at 85% 18%, rgba(255, 220, 170, 0.25), transparent 60%),
+    linear-gradient(180deg, #0569a8 0%, #1497d4 55%, #4cc0ea 100%);
+}
+
+/* Teknelerin hareketi (SVG kullanıcı birimleriyle) */
+@keyframes sail-ltr {
+  from { transform: translateX(-260px); }
+  to { transform: translateX(1600px); }
+}
+@keyframes sail-rtl {
+  from { transform: translateX(1500px); }
+  to { transform: translateX(-120px); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(2.5px) rotate(-0.6deg); }
+}
+@keyframes smoke {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 0.2; transform: translateY(-4px); }
+}
+.sail-a { animation: sail-ltr 48s linear infinite; animation-delay: -14s; }
+.sail-b { animation: sail-rtl 70s linear infinite; animation-delay: -30s; }
+.sail-c { animation: sail-ltr 16s linear infinite; animation-delay: -6s; }
+.bob { animation: bob 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+.smoke { animation: smoke 3s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sail-a, .sail-b, .sail-c, .bob, .smoke { animation: none; }
+  .sail-a { transform: translateX(360px); }
+  .sail-b { transform: translateX(1000px); }
+  .sail-c { transform: translateX(200px); }
 }
