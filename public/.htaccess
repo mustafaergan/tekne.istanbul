@@ -1,11 +1,10 @@
 RewriteEngine On
 
 # Tek adres: https://tekne.istanbul (http ve www yönlendirilir; SSL doğrulaması için .well-known hariç)
-# TODO: SSL kurulana kadar HTTPS yönlendirmesi kapalı. Sertifika gelince alttaki iki satırı açın.
-# RewriteCond %{REQUEST_URI} !^/\.well-known/
-# RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteCond %{HTTPS} !=on [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
-RewriteRule ^(.*)$ http://tekne.istanbul/$1 [R=301,L]
+RewriteRule ^(.*)$ https://tekne.istanbul/$1 [R=301,L]
 
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css|woff2|png|svg|ico)$">
