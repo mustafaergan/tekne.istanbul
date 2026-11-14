@@ -1,0 +1,21 @@
+RewriteEngine On
+
+# Tek adres: https://tekne.istanbul (http ve www yönlendirilir; SSL doğrulaması için .well-known hariç)
+# TODO: SSL kurulana kadar HTTPS yönlendirmesi kapalı. Sertifika gelince alttaki iki satırı açın.
+# RewriteCond %{REQUEST_URI} !^/\.well-known/
+# RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^(.*)$ http://tekne.istanbul/$1 [R=301,L]
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2|png|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|xml|txt)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+ErrorDocument 404 /404.html

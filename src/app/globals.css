@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --sea-900: #062a3a;
+  --sea-800: #0a3d54;
+  --sea-700: #0f5472;
+  --sea-500: #1b8fb8;
+  --sea-100: #e4f3f8;
+  --sand: #f7f4ee;
+  --ink: #0f1b22;
+  --dim: #55656e;
+  --line: #dde4e7;
+  --card: #ffffff;
+  --accent: #ff7a3d;
+  --ok: #15803d;
+  --err: #b91c1c;
+}
+
+@theme inline {
+  --color-sea-900: var(--sea-900);
+  --color-sea-800: var(--sea-800);
+  --color-sea-700: var(--sea-700);
+  --color-sea-500: var(--sea-500);
+  --color-sea-100: var(--sea-100);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-dim: var(--dim);
+  --color-line: var(--line);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-ok: var(--ok);
+  --color-err: var(--err);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--sand);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+@media (min-width: 768px) {
+  .wrap {
+    padding-inline: 32px;
+  }
+}
+
+.field {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field:focus {
+  border-color: var(--sea-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sea-500) 20%, transparent);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-weight: 600;
+  transition: transform 0.15s, background 0.15s, opacity 0.15s;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #f2692a;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+}
+.btn-ghost {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+.btn-ghost:hover {
+  border-color: var(--sea-500);
+}
+
+.waves {
+  background:
+    radial-gradient(1200px 400px at 80% -10%, color-mix(in srgb, var(--sea-500) 45%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--sea-900), var(--sea-800));
+}
