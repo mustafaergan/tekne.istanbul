@@ -106,7 +106,8 @@ foreach ($rows as $r) {
     $when = $r['res_date'] ? date('d.m.Y', strtotime($r['res_date'])) . ' ' . h($r['res_time']) . ($r['guests'] ? " · {$r['guests']} kişi" : '') : '';
     $extra = array_filter([$r['job_type'], $r['boat'], $r['location']]);
     $html .= '<article id="t' . $r['id'] . '" class="st-' . h($r['status']) . '">'
-        . '<div class="top"><span class="tag">' . h($KIND[$r['kind']] ?? $r['kind']) . '</span> <b>' . h($r['service_title'] ?: $r['service']) . '</b>'
+        . '<div class="top"><span class="tag">' . h($KIND[$r['kind']] ?? $r['kind']) . '</span>'
+        . (($r['lang'] ?? 'tr') !== 'tr' ? ' <span class="tag lang">' . h(strtoupper($r['lang'])) . '</span>' : '') . ' <b>' . h($r['service_title'] ?: $r['service']) . '</b>'
         . '<span class="muted">#' . $r['id'] . ' · ' . date('d.m.Y H:i', strtotime($r['created_at'])) . '</span></div>'
         . '<div class="who"><b>' . h($r['name']) . '</b> <a href="tel:' . h($tel) . '">' . h($r['phone']) . '</a> <a href="https://wa.me/' . h($wa) . '" target="_blank" rel="noopener">WhatsApp</a></div>'
         . ($when ? '<div class="when">📅 ' . $when . '</div>' : '')
@@ -128,7 +129,7 @@ function page(string $title, string $body): void
         . 'main{max-width:960px;margin:0 auto;padding:16px}header{display:flex;justify-content:space-between;align-items:center}h1{font-size:22px}a{color:var(--sea)}'
         . 'nav{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}nav a{padding:6px 12px;border-radius:99px;background:#fff;border:1px solid var(--line);text-decoration:none;color:inherit;font-size:14px}nav a.on{background:var(--sea);color:#fff;border-color:var(--sea)}nav.sub a{font-size:13px;padding:4px 10px}'
         . 'article{background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}article.st-yeni{border-left-color:#ff7a3d}article.st-onaylandi{border-left-color:#15803d}article.st-iptal{opacity:.6}'
-        . '.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.muted{color:var(--dim);font-size:13px}.top .muted{margin-left:auto}.tag{background:#e4f3f8;color:var(--sea);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600}'
+        . '.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.muted{color:var(--dim);font-size:13px}.top .muted{margin-left:auto}.tag{background:#e4f3f8;color:var(--sea);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600}.tag.lang{background:#fff1e8;color:#c2410c}'
         . '.who{margin-top:6px;display:flex;gap:12px;flex-wrap:wrap}.when{margin-top:4px;font-weight:600}.note{background:var(--bg);border-radius:8px;padding:8px 10px;margin:8px 0 0}'
         . '.edit{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.edit .wide{flex:1;min-width:180px}input,select,button{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}input[name=amount]{width:110px}button{background:var(--sea);color:#fff;border-color:var(--sea);cursor:pointer}'
         . '.login{max-width:340px;margin:12vh auto;background:#fff;padding:24px;border-radius:16px;border:1px solid var(--line);display:grid;gap:12px}.login label{display:grid;gap:4px;font-size:14px}.err{color:#b91c1c}.empty{color:var(--dim);padding:40px 0;text-align:center}'
