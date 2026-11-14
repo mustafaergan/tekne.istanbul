@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "tr_TR", siteName: "tekne.istanbul" },
 };
 
-export const viewport: Viewport = { themeColor: "#062a3a" };
+export const viewport: Viewport = { themeColor: "#0a5f8f" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

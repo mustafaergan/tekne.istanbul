@@ -6,6 +6,7 @@ import { BookingPanel } from "@/components/BookingPanel";
 import { Icon } from "@/components/Icon";
 import { price } from "@/lib/format";
 import { ServiceCard } from "@/components/ServiceCard";
+import { Skyline } from "@/components/Skyline";
 
 export const dynamicParams = false;
 export const generateStaticParams = () => services.map((s) => ({ slug: s.slug }));
@@ -25,9 +26,9 @@ export default async function ServicePage({ params }: Props) {
 
   return (
     <>
-      <section className="waves text-white">
-        <div className="wrap pb-14 pt-28">
-          <Link href="/#hizmetler" className="text-sm text-sea-100/80 hover:text-white">
+      <section className="waves relative overflow-hidden text-white">
+        <div className="wrap relative pb-4 pt-28">
+          <Link href="/#hizmetler" className="text-sm text-white/80 hover:text-white">
             ← {categories[s.category]}
           </Link>
           <div className="mt-4 flex items-center gap-4">
@@ -36,12 +37,13 @@ export default async function ServicePage({ params }: Props) {
             </div>
             <h1 className="text-3xl font-bold sm:text-5xl">{s.title}</h1>
           </div>
-          <p className="mt-4 max-w-2xl text-lg text-sea-100/90">{s.short}</p>
+          <p className="mt-4 max-w-2xl text-lg text-white/90">{s.short}</p>
         </div>
+        <Skyline />
       </section>
 
-      <div className="wrap -mt-6 grid gap-8 lg:grid-cols-[1fr_440px]">
-        <div className="order-2 pt-6 lg:order-1 lg:pt-14">
+      <div className="wrap grid gap-8 lg:grid-cols-[1fr_440px]">
+        <div className="order-2 lg:order-1 lg:pt-4">
           <p className="text-lg leading-relaxed">{s.description}</p>
           <dl className="mt-8 grid grid-cols-3 gap-3 text-sm">
             {s.duration && (
