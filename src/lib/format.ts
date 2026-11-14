@@ -1,16 +1,27 @@
-export const price = (n?: number) =>
-  n ? `${n.toLocaleString("tr-TR")} TL'den başlayan` : "Fiyat için sorun";
+import { intlLocale, type Locale } from "@/i18n/locales";
+import { ui } from "@/i18n/ui";
 
-const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-const days = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
-
-export const monthName = (m: number) => months[m];
+export const price = (l: Locale, n?: number) =>
+  n ? ui[l].card.priceFrom(n.toLocaleString(intlLocale[l])) : ui[l].card.askPrice;
 
 export const isoDate = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
-export const longDate = (iso: string) => {
+const parse = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
-  const dt = new Date(y, m - 1, d);
-  return `${d} ${months[m - 1]} ${y}, ${days[dt.getDay()]}`;
+  return new Date(y, m - 1, d);
 };
+
+export const longDate = (l: Locale, iso: string) =>
+  new Intl.DateTimeFormat(intlLocale[l], { day: "numeric", month: "long", year: "numeric", weekday: "long" }).format(parse(iso));
+
+export const monthTitle = (l: Locale, d: Date) =>
+  new Intl.DateTimeFormat(intlLocale[l], { month: "long", year: "numeric" }).format(d);
+
+/** Pazartesiden başlayan kısa gün adları */
+export const weekdays = (l: Locale) =>
+  Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(intlLocale[l], { weekday: "short" }).format(new Date(2024, 0, 1 + i)), // 1 Ocak 2024 pazartesi
+  );
+
+export const dayNumber = (l: Locale, d: Date) => new Intl.DateTimeFormat(intlLocale[l], { day: "numeric" }).format(d);

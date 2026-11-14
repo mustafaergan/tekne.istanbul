@@ -49,6 +49,7 @@ function tekne_db(): PDO
         payment_status ENUM('yok','bekliyor','odendi','iade') NOT NULL DEFAULT 'yok',
         amount DECIMAL(10,2) NULL,
         admin_note TEXT NULL,
+        lang CHAR(2) NOT NULL DEFAULT 'tr',
         ip VARCHAR(45) NULL,
         user_agent VARCHAR(255) NULL,
         INDEX (created_at),
@@ -56,6 +57,12 @@ function tekne_db(): PDO
         INDEX (res_date),
         INDEX (ip, created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    // Sonradan eklenen sütunlar
+    $cols = $db->query('SHOW COLUMNS FROM requests')->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('lang', $cols, true)) {
+        $db->exec("ALTER TABLE requests ADD COLUMN lang CHAR(2) NOT NULL DEFAULT 'tr' AFTER admin_note");
+    }
     return $db;
 }
 
@@ -76,6 +83,7 @@ function tekne_notify(int $id, array $r): void
         'Hizmet   : ' . ($r['service_title'] ?: $r['service']),
         "Ad       : {$r['name']}",
         "Telefon  : {$r['phone']}",
+        'Dil      : ' . strtoupper($r['lang'] ?? 'tr'),
     ];
     if ($r['res_date']) $lines[] = "Tarih    : {$r['res_date']} {$r['res_time']}";
     if ($r['guests']) $lines[] = "Kişi     : {$r['guests']}";

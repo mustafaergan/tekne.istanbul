@@ -44,6 +44,7 @@ $r = [
     'job_type' => $one('jobType', 80) ?: null,
     'boat' => $one('boat', 120) ?: null,
     'location' => $one('location', 160) ?: null,
+    'lang' => in_array($_POST['lang'] ?? '', ['tr', 'en', 'ar', 'fr', 'it'], true) ? $_POST['lang'] : 'tr',
 ];
 
 $errors = [];
@@ -79,11 +80,11 @@ try {
     if ((int)$q->fetchColumn() >= 8) reply(429, ['ok' => false, 'error' => 'Çok fazla deneme yapıldı. Lütfen bizi arayın.']);
 
     $ins = $db->prepare('INSERT INTO requests
-        (kind, service, service_title, res_date, res_time, guests, name, phone, note, job_type, boat, location, ip, user_agent)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        (kind, service, service_title, res_date, res_time, guests, name, phone, note, job_type, boat, location, lang, ip, user_agent)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $ins->execute([
         $r['kind'], $r['service'], $r['service_title'] ?: null, $r['res_date'], $r['res_time'], $r['guests'],
-        $r['name'], $r['phone'], $r['note'] !== '' ? $r['note'] : null, $r['job_type'], $r['boat'], $r['location'], $ip, $ua,
+        $r['name'], $r['phone'], $r['note'] !== '' ? $r['note'] : null, $r['job_type'], $r['boat'], $r['location'], $r['lang'], $ip, $ua,
     ]);
     $id = (int)$db->lastInsertId();
 
