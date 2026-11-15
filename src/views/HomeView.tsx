@@ -2,7 +2,7 @@ import Link from "next/link";
 import { services } from "@/lib/services";
 import { ServiceCard } from "@/components/ServiceCard";
 import { CallbackForm } from "@/components/BookingPanel";
-import { site, waLink } from "@/lib/site";
+import { phoneFor, site, waLink } from "@/lib/site";
 import { WaIcon } from "@/components/Icon";
 import { Gulls, Skyline } from "@/components/Skyline";
 import { businessLd, buildMetadata, JsonLd } from "@/lib/seo";
@@ -63,7 +63,7 @@ export function HomeView({ lang }: { lang: Locale }) {
             <h2 className="text-2xl font-bold sm:text-3xl">{t.undecided.title}</h2>
             <p className="mt-3 text-sea-100/90">{t.undecided.sub}</p>
             <a href={`tel:${site.phoneHref}`} className="mt-4 inline-block text-2xl font-semibold text-accent" dir="ltr">
-              {site.phone}
+              {phoneFor(lang)}
             </a>
           </div>
           <div className="rounded-2xl bg-white p-5 text-ink">
