@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { site, waLink } from "@/lib/site";
+import { phoneFor, site, waLink } from "@/lib/site";
 import { WaIcon } from "./Icon";
 import { LangSwitch } from "./LangSwitch";
 import { dir, home, path, privacySlug, type Locale } from "@/i18n/locales";
@@ -53,7 +53,7 @@ export function Footer({ lang }: { lang: Locale }) {
         <div className="space-y-1">
           <div className="font-semibold text-ink">{t.contact}</div>
           <a className="block hover:text-ink" href={`tel:${site.phoneHref}`} dir="ltr">
-            {site.phone}
+            {phoneFor(lang)}
           </a>
           <a className="block hover:text-ink" href={`mailto:${site.email}`}>
             {site.email}

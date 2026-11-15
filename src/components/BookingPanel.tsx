@@ -5,7 +5,7 @@ import { useState } from "react";
 import { services, type Service } from "@/lib/services";
 import { Calendar } from "./Calendar";
 import { longDate } from "@/lib/format";
-import { site } from "@/lib/site";
+import { phoneFor } from "@/lib/site";
 import { path, privacySlug, type Locale } from "@/i18n/locales";
 import { ui } from "@/i18n/ui";
 
@@ -28,7 +28,7 @@ async function send(lang: Locale, data: Record<string, string>): Promise<State> 
     }
     return { status: "error", message: r.status === 429 ? e.rate : e.server };
   } catch {
-    return { status: "error", message: e.network(site.phone) };
+    return { status: "error", message: e.network(phoneFor(lang)) };
   }
 }
 
