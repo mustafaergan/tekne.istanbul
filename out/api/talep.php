@@ -9,6 +9,14 @@ require __DIR__ . '/lib.php';
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
+// Mobil uygulamanın web önizlemesi başka bir kaynaktan gönderir; form herkese açık olduğu için sakıncası yok.
+header('Access-Control-Allow-Origin: *');
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
+    http_response_code(204);
+    exit;
+}
 
 function reply(int $code, array $body): void
 {
@@ -92,6 +100,11 @@ try {
         tekne_notify($id, $r);
     } catch (Throwable $e) {
         error_log('tekne bildirim: ' . $e->getMessage());
+    }
+    try {
+        tekne_push($db, $id, $r);
+    } catch (Throwable $e) {
+        error_log('tekne push: ' . $e->getMessage());
     }
     reply(200, ['ok' => true, 'id' => $id]);
 } catch (Throwable $e) {

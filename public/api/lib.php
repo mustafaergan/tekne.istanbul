@@ -66,6 +66,54 @@ function tekne_db(): PDO
     return $db;
 }
 
+// Mobil uygulamada giriş yapmış yönetici cihazları (Expo push jetonları)
+function tekne_push_table(PDO $db): void
+{
+    $db->exec("CREATE TABLE IF NOT EXISTS push_devices (
+        expo_token VARCHAR(255) NOT NULL PRIMARY KEY,
+        platform VARCHAR(10) NULL,
+        token_id INT UNSIGNED NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        last_seen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+// Yeni talep: kayıtlı yönetici telefonlarına Expo Push ile anlık bildirim.
+// Expo "DeviceNotRegistered" derse cihaz silinir (uygulama kaldırılmış).
+function tekne_push(PDO $db, int $id, array $r): void
+{
+    tekne_push_table($db);
+    $tokens = $db->query('SELECT expo_token FROM push_devices')->fetchAll(PDO::FETCH_COLUMN);
+    if (!$tokens) return;
+    $kinds = ['rezervasyon' => 'Rezervasyon', 'geri-arama' => 'Geri arama', 'servis' => 'Bakım / usta'];
+    $title = ($kinds[$r['kind']] ?? 'Talep') . ': ' . ($r['service_title'] ?: $r['service']);
+    $body = $r['name'] . ' · ' . $r['phone'] . ($r['res_date'] ? " · {$r['res_date']} {$r['res_time']}" : '');
+    $messages = array_map(static fn($t) => [
+        'to' => $t, 'title' => $title, 'body' => $body, 'sound' => 'default',
+        'channelId' => 'talepler', 'priority' => 'high', 'data' => ['id' => $id],
+    ], $tokens);
+
+    $payload = json_encode($messages, JSON_UNESCAPED_UNICODE);
+    $headers = ['Accept: application/json', 'Content-Type: application/json'];
+    if (function_exists('curl_init')) {
+        $ch = curl_init('https://exp.host/--/api/v2/push/send');
+        curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => $payload, CURLOPT_HTTPHEADER => $headers, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 8]);
+        $res = curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $res = @file_get_contents('https://exp.host/--/api/v2/push/send', false, stream_context_create(['http' => [
+            'method' => 'POST', 'header' => implode("\r\n", $headers), 'content' => $payload, 'timeout' => 8,
+        ]]));
+    }
+    $j = is_string($res) ? json_decode($res, true) : null;
+    foreach (($j['data'] ?? []) as $i => $ticket) {
+        if (($ticket['details']['error'] ?? '') === 'DeviceNotRegistered' && isset($tokens[$i])) {
+            $db->prepare('DELETE FROM push_devices WHERE expo_token = ?')->execute([$tokens[$i]]);
+        }
+    }
+    if (!$j) error_log("tekne push: Expo yaniti okunamadi (#$id)");
+}
+
 // Yeni talep bildirimi. SMTP ayarı yoksa sessizce atlanır (talep yine kayıtlıdır).
 function tekne_notify(int $id, array $r): void
 {
