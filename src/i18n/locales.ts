@@ -23,3 +23,12 @@ export const path = (l: Locale, slug: string) => `${home(l)}${slug}/`;
 
 /** Gizlilik sayfasının her dildeki adresi */
 export const privacySlug: Record<Locale, string> = { tr: "kvkk", en: "privacy", ar: "privacy", fr: "confidentialite", it: "privacy" };
+
+/** İptal ve değişiklik koşulları sayfasının adresi */
+export const policySlug: Record<Locale, string> = {
+  tr: "iptal-kosullari",
+  en: "cancellation-policy",
+  ar: "cancellation-policy",
+  fr: "conditions-annulation",
+  it: "condizioni-cancellazione",
+};

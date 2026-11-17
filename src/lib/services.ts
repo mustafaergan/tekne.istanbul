@@ -6,10 +6,11 @@
 // Her hizmette "Beni arayın" seçeneği de vardır (yalnızca ad + telefon).
 
 import type { Locale } from "@/i18n/locales";
+import type { ExtraId } from "./options";
 
 export type Booking = "takvim" | "servis";
 export type Category = "kiralama" | "tur" | "bakim";
-export type IconName = "ring" | "cup" | "moon" | "jetski" | "oar" | "speed" | "yacht" | "wrench" | "engine";
+export type IconName = "ring" | "cup" | "moon" | "jetski" | "oar" | "speed" | "yacht" | "wrench" | "engine" | "sunset" | "island" | "party";
 
 export type ServiceText = {
   slug: string;
@@ -27,8 +28,12 @@ export type Service = {
   id: string;
   category: Category;
   priceFrom?: number; // TL, yoksa "Fiyat sorunuz"
+  priceUnit?: "saat" | "paket" | "kisi"; // priceFrom neyin fiyatı (saatlik / paket / kişi başı)
   booking: Booking;
   times?: string[];
+  hours?: number[]; // müşterinin seçebileceği süreler (saat); ilk değer en az süredir
+  pier?: boolean; // kalkış iskelesi sorulsun mu
+  extras?: ExtraId[]; // seçilebilir ek hizmetler
   icon: IconName;
   tone: string;
   text: Record<Locale, ServiceText>;
@@ -40,6 +45,7 @@ export const services: Service[] = [
     category: "tur",
     booking: "takvim",
     times: ["11:00", "14:00", "17:00", "19:00", "21:00"],
+    pier: true, extras: ["susleme", "cicek", "pasta", "fotograf", "muzik", "yemek", "transfer"],
     icon: "ring",
     tone: "#c2416b",
     text: {
@@ -100,6 +106,7 @@ export const services: Service[] = [
     category: "tur",
     booking: "takvim",
     times: ["08:00", "09:00", "10:00"],
+    pier: true, extras: ["pasta", "susleme", "fotograf", "transfer"],
     icon: "cup",
     tone: "#d9822b",
     text: {
@@ -160,6 +167,7 @@ export const services: Service[] = [
     category: "tur",
     booking: "takvim",
     times: ["19:00", "20:00", "21:00", "22:00"],
+    hours: [2, 3, 4], pier: true, extras: ["yemek", "muzik", "fotograf", "pasta", "transfer"],
     icon: "moon",
     tone: "#3b4cb8",
     text: {
@@ -220,6 +228,7 @@ export const services: Service[] = [
     category: "kiralama",
     booking: "takvim",
     times: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"],
+    priceUnit: "saat", hours: [2, 3, 4, 6, 8], pier: true, extras: ["yemek", "pasta", "susleme", "muzik", "fotograf", "transfer"],
     icon: "yacht",
     tone: "#0e7490",
     text: {
@@ -280,6 +289,7 @@ export const services: Service[] = [
     category: "kiralama",
     booking: "takvim",
     times: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    priceUnit: "saat", hours: [0.5, 1, 2],
     icon: "jetski",
     tone: "#0891b2",
     text: {
@@ -340,6 +350,7 @@ export const services: Service[] = [
     category: "kiralama",
     booking: "takvim",
     times: ["10:00", "12:00", "14:00", "16:00", "18:00"],
+    priceUnit: "saat", hours: [1, 2, 3], pier: true, extras: ["transfer"],
     icon: "speed",
     tone: "#be123c",
     text: {
@@ -400,6 +411,7 @@ export const services: Service[] = [
     category: "kiralama",
     booking: "takvim",
     times: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    priceUnit: "saat", hours: [1, 2, 3],
     icon: "oar",
     tone: "#15803d",
     text: {
@@ -452,6 +464,194 @@ export const services: Service[] = [
         includes: ["Giubbotti di salvataggio", "Noleggio a ore", "Giubbotti per bambini", "Breve briefing"],
         duration: "1 ora",
         capacity: "1–4 persone",
+      },
+    },
+  },
+  {
+    id: "adalar-turu",
+    category: "tur",
+    booking: "takvim",
+    times: ["09:00", "10:00", "11:00"],
+    pier: true,
+    extras: ["yemek", "transfer", "fotograf"],
+    icon: "island",
+    tone: "#0d9488",
+    text: {
+      tr: {
+        slug: "adalar-tekne-turu",
+        title: "Adalar ve yüzme turu",
+        seoTitle: "Adalar Tekne Turu İstanbul, Teknede Yüzme ve Günlük Yat Turu",
+        short: "Prens Adaları'nın koylarında yüzme molalı günlük tekne turu.",
+        description: "Sabah Boğaz'dan çıkıp Büyükada, Heybeliada ve Burgazada'nın sakin koylarında demirliyoruz. Yüzme molaları, öğle yemeği ve gün boyu deniz; akşamüstü dönüş.",
+        includes: ["Özel tekne ve kaptan", "Koylarda yüzme molaları", "İsteğe bağlı öğle yemeği", "Can yelekleri ve havlu"],
+        duration: "Tam gün (yaklaşık 8 saat)",
+        capacity: "2–20 kişi",
+      },
+      en: {
+        slug: "princes-islands-boat-tour",
+        title: "Islands and swimming tour",
+        seoTitle: "Princes' Islands Boat Tour Istanbul, Swimming Day Cruise",
+        short: "A day cruise with swimming stops in the bays of the Princes' Islands.",
+        description: "We leave the Bosphorus in the morning and anchor in the quiet bays of Büyükada, Heybeliada and Burgazada. Swimming stops, lunch and a whole day at sea; back in the late afternoon.",
+        includes: ["Private boat and captain", "Swimming stops in the bays", "Optional lunch", "Life jackets and towels"],
+        duration: "Full day (about 8 hours)",
+        capacity: "2–20 guests",
+      },
+      ar: {
+        slug: "princes-islands-boat-tour",
+        title: "جولة الجزر والسباحة",
+        seoTitle: "جولة بالقارب إلى جزر الأميرات في إسطنبول مع السباحة",
+        short: "رحلة يومية بالقارب مع توقفات للسباحة في خلجان جزر الأميرات.",
+        description: "ننطلق من البوسفور صباحاً ونرسو في الخلجان الهادئة لجزر بيوك أدا وهيبلي أدا وبورغاز أدا. توقفات للسباحة وغداء ويوم كامل في البحر، والعودة بعد الظهر.",
+        includes: ["قارب خاص مع قبطان", "توقفات للسباحة في الخلجان", "غداء حسب الرغبة", "سترات نجاة ومناشف"],
+        duration: "يوم كامل (نحو ٨ ساعات)",
+        capacity: "٢–٢٠ شخصاً",
+      },
+      fr: {
+        slug: "excursion-iles-des-princes",
+        title: "Îles des Princes et baignade",
+        seoTitle: "Excursion en bateau aux îles des Princes, Istanbul, avec baignade",
+        short: "Une journée en bateau avec baignades dans les criques des îles des Princes.",
+        description: "Départ le matin depuis le Bosphore, puis mouillage dans les criques calmes de Büyükada, Heybeliada et Burgazada. Baignades, déjeuner et une journée entière en mer ; retour en fin d'après-midi.",
+        includes: ["Bateau privé et capitaine", "Baignades dans les criques", "Déjeuner en option", "Gilets de sauvetage et serviettes"],
+        duration: "Journée (environ 8 heures)",
+        capacity: "2–20 personnes",
+      },
+      it: {
+        slug: "tour-isole-dei-principi",
+        title: "Isole e bagno in mare",
+        seoTitle: "Tour in barca alle Isole dei Principi, Istanbul, con bagno",
+        short: "Una giornata in barca con soste per il bagno nelle baie delle Isole dei Principi.",
+        description: "Si parte la mattina dal Bosforo e ci si ancora nelle baie tranquille di Büyükada, Heybeliada e Burgazada. Bagni, pranzo e un'intera giornata in mare; rientro nel tardo pomeriggio.",
+        includes: ["Barca privata e capitano", "Soste per il bagno nelle baie", "Pranzo su richiesta", "Giubbotti di salvataggio e asciugamani"],
+        duration: "Giornata intera (circa 8 ore)",
+        capacity: "2–20 persone",
+      },
+    },
+  },
+  {
+    id: "gun-batimi-turu",
+    category: "tur",
+    booking: "takvim",
+    times: ["16:30", "17:30", "18:30", "19:30"],
+    hours: [2, 3],
+    pier: true,
+    extras: ["yemek", "pasta", "fotograf", "muzik", "transfer"],
+    icon: "sunset",
+    tone: "#ea580c",
+    text: {
+      tr: {
+        slug: "gun-batimi-turu",
+        title: "Gün batımı turu",
+        seoTitle: "Gün Batımı Boğaz Turu İstanbul, Özel Tekne ile Akşamüstü Turu",
+        short: "Kız Kulesi ve Sarayburnu önünde güneşi batırın.",
+        description: "Akşamüstü yola çıkıp güneşin tarihi yarımadanın arkasında batışını denizden izliyoruz. Saatleri mevsime göre gün batımına denk gelecek şekilde ayarlıyoruz.",
+        includes: ["Özel tekne ve kaptan", "Kız Kulesi ve Sarayburnu rotası", "Çay, kahve ve meşrubat", "Müzik sistemi"],
+        duration: "2–3 saat",
+        capacity: "2–20 kişi",
+      },
+      en: {
+        slug: "sunset-bosphorus-cruise",
+        title: "Sunset cruise",
+        seoTitle: "Sunset Bosphorus Cruise Istanbul, Private Boat at Golden Hour",
+        short: "Watch the sun go down by the Maiden's Tower and Seraglio Point.",
+        description: "We set off in the late afternoon and watch the sun set behind the historic peninsula from the water. Times are adjusted to the season so you catch the sunset.",
+        includes: ["Private boat and captain", "Maiden's Tower and Seraglio Point route", "Tea, coffee and soft drinks", "Sound system"],
+        duration: "2–3 hours",
+        capacity: "2–20 guests",
+      },
+      ar: {
+        slug: "sunset-bosphorus-cruise",
+        title: "جولة الغروب",
+        seoTitle: "جولة الغروب في البوسفور بقارب خاص، إسطنبول",
+        short: "شاهد غروب الشمس أمام برج الفتاة ورأس السراي.",
+        description: "ننطلق بعد الظهر ونشاهد غروب الشمس خلف شبه الجزيرة التاريخية من البحر. نضبط المواعيد حسب الموسم لتوافق الغروب.",
+        includes: ["قارب خاص مع قبطان", "مسار برج الفتاة ورأس السراي", "شاي وقهوة ومشروبات", "نظام صوتي"],
+        duration: "٢–٣ ساعات",
+        capacity: "٢–٢٠ شخصاً",
+      },
+      fr: {
+        slug: "croisiere-coucher-de-soleil",
+        title: "Croisière au coucher du soleil",
+        seoTitle: "Croisière coucher de soleil sur le Bosphore, bateau privé, Istanbul",
+        short: "Le coucher du soleil devant la tour de Léandre et la pointe du Sérail.",
+        description: "Départ en fin d'après-midi pour voir le soleil se coucher derrière la péninsule historique depuis la mer. Les horaires suivent la saison pour ne pas manquer le coucher du soleil.",
+        includes: ["Bateau privé et capitaine", "Itinéraire tour de Léandre et pointe du Sérail", "Thé, café et boissons", "Système audio"],
+        duration: "2–3 heures",
+        capacity: "2–20 personnes",
+      },
+      it: {
+        slug: "crociera-al-tramonto",
+        title: "Crociera al tramonto",
+        seoTitle: "Crociera al tramonto sul Bosforo, barca privata, Istanbul",
+        short: "Il tramonto davanti alla Torre della Fanciulla e a Punta del Serraglio.",
+        description: "Si parte nel tardo pomeriggio e si guarda il sole tramontare dietro la penisola storica dal mare. Gli orari seguono la stagione per non perdere il tramonto.",
+        includes: ["Barca privata e capitano", "Percorso Torre della Fanciulla e Punta del Serraglio", "Tè, caffè e bibite", "Impianto audio"],
+        duration: "2–3 ore",
+        capacity: "2–20 persone",
+      },
+    },
+  },
+  {
+    id: "teknede-kutlama",
+    category: "tur",
+    booking: "takvim",
+    times: ["12:00", "15:00", "18:00", "20:00"],
+    hours: [2, 3, 4],
+    pier: true,
+    extras: ["susleme", "pasta", "muzik", "yemek", "fotograf", "cicek", "transfer"],
+    icon: "party",
+    tone: "#a21caf",
+    text: {
+      tr: {
+        slug: "teknede-dogum-gunu-kina",
+        title: "Doğum günü, kına ve kutlama",
+        seoTitle: "Teknede Doğum Günü, Kına Gecesi ve Bekarlığa Veda İstanbul",
+        short: "Doğum günü, kına, bekarlığa veda ya da şirket kutlaması teknede.",
+        description: "Tekneyi kutlamanıza göre süslüyor; pasta, müzik ve yemeği ayarlıyoruz. Kişi sayınıza uygun tekneyi seçip Boğaz'da size özel bir gece hazırlıyoruz.",
+        includes: ["Kişi sayısına uygun tekne", "Temaya göre süsleme", "Pasta, yemek ve içecek seçenekleri", "Müzik sistemi veya DJ"],
+        duration: "2–4 saat",
+        capacity: "2–50 kişi",
+      },
+      en: {
+        slug: "birthday-party-boat",
+        title: "Birthdays, henna nights and parties",
+        seoTitle: "Birthday Party on a Boat Istanbul, Henna Night and Bachelorette Cruise",
+        short: "A birthday, henna night, bachelor(ette) or company party on a boat.",
+        description: "We decorate the boat for your celebration and arrange the cake, music and food. We pick a boat that fits your group and prepare a private night on the Bosphorus.",
+        includes: ["Boat sized for your group", "Themed decoration", "Cake, food and drink options", "Sound system or DJ"],
+        duration: "2–4 hours",
+        capacity: "2–50 guests",
+      },
+      ar: {
+        slug: "birthday-party-boat",
+        title: "أعياد الميلاد والحناء والاحتفالات",
+        seoTitle: "حفلة عيد ميلاد على قارب في إسطنبول، ليلة الحناء وحفلات توديع العزوبية",
+        short: "عيد ميلاد أو ليلة حناء أو حفلة توديع عزوبية أو احتفال شركة على قارب.",
+        description: "نزين القارب حسب احتفالك ونرتب الكعكة والموسيقى والطعام. نختار قارباً يناسب عدد ضيوفك ونجهز لك ليلة خاصة في البوسفور.",
+        includes: ["قارب يناسب عدد الضيوف", "زينة حسب الموضوع", "خيارات الكعك والطعام والمشروبات", "نظام صوتي أو دي جي"],
+        duration: "٢–٤ ساعات",
+        capacity: "٢–٥٠ شخصاً",
+      },
+      fr: {
+        slug: "anniversaire-en-bateau",
+        title: "Anniversaires, henné et fêtes",
+        seoTitle: "Anniversaire en bateau à Istanbul, soirée henné et EVJF",
+        short: "Anniversaire, soirée henné, EVG/EVJF ou fête d'entreprise en bateau.",
+        description: "Nous décorons le bateau pour votre fête et organisons le gâteau, la musique et le repas. Nous choisissons un bateau adapté à votre groupe pour une soirée privée sur le Bosphore.",
+        includes: ["Bateau adapté au groupe", "Décoration à thème", "Gâteau, repas et boissons", "Système audio ou DJ"],
+        duration: "2–4 heures",
+        capacity: "2–50 personnes",
+      },
+      it: {
+        slug: "festa-di-compleanno-in-barca",
+        title: "Compleanni, henné e feste",
+        seoTitle: "Festa di compleanno in barca a Istanbul, notte dell'henné e addio al nubilato",
+        short: "Compleanno, notte dell'henné, addio al celibato/nubilato o festa aziendale in barca.",
+        description: "Decoriamo la barca per la tua festa e organizziamo torta, musica e cibo. Scegliamo una barca adatta al tuo gruppo e prepariamo una serata privata sul Bosforo.",
+        includes: ["Barca adatta al gruppo", "Decorazioni a tema", "Torta, cibo e bevande", "Impianto audio o DJ"],
+        duration: "2–4 ore",
+        capacity: "2–50 persone",
       },
     },
   },

@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const keys: [PageKey, number][] = [
     [{ kind: "home" }, 1],
     ...services.map((s): [PageKey, number] => [{ kind: "service", id: s.id }, 0.8]),
+    [{ kind: "policy" }, 0.3],
     [{ kind: "privacy" }, 0.2],
   ];
   const now = new Date();

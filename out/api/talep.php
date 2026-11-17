@@ -52,6 +52,9 @@ $r = [
     'job_type' => $one('jobType', 80) ?: null,
     'boat' => $one('boat', 120) ?: null,
     'location' => $one('location', 160) ?: null,
+    'hours' => null,
+    'pier' => null,
+    'extras' => null,
     'lang' => in_array($_POST['lang'] ?? '', ['tr', 'en', 'ar', 'fr', 'it'], true) ? $_POST['lang'] : 'tr',
 ];
 
@@ -74,6 +77,12 @@ if ($kind === 'rezervasyon') {
     $r['res_date'] = $date;
     $r['res_time'] = $time;
     $r['guests'] = max(1, min(99, (int)($_POST['guests'] ?? 1)));
+    $h = (float)($_POST['hours'] ?? 0);
+    $r['hours'] = $h >= 0.5 && $h <= 24 ? round($h * 2) / 2 : null;
+    $pier = $one('pier', 40);
+    $r['pier'] = $pier !== '' ? $pier : null;
+    $ex = $one('extras', 255);
+    $r['extras'] = $ex !== '' ? $ex : null;
 }
 
 if ($errors) reply(422, ['ok' => false, 'errors' => $errors, 'error' => 'Lütfen işaretli alanları kontrol edin.']);
@@ -88,10 +97,10 @@ try {
     if ((int)$q->fetchColumn() >= 8) reply(429, ['ok' => false, 'error' => 'Çok fazla deneme yapıldı. Lütfen bizi arayın.']);
 
     $ins = $db->prepare('INSERT INTO requests
-        (kind, service, service_title, res_date, res_time, guests, name, phone, note, job_type, boat, location, lang, ip, user_agent)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        (kind, service, service_title, res_date, res_time, guests, hours, pier, extras, name, phone, note, job_type, boat, location, lang, ip, user_agent)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $ins->execute([
-        $r['kind'], $r['service'], $r['service_title'] ?: null, $r['res_date'], $r['res_time'], $r['guests'],
+        $r['kind'], $r['service'], $r['service_title'] ?: null, $r['res_date'], $r['res_time'], $r['guests'], $r['hours'], $r['pier'], $r['extras'],
         $r['name'], $r['phone'], $r['note'] !== '' ? $r['note'] : null, $r['job_type'], $r['boat'], $r['location'], $r['lang'], $ip, $ua,
     ]);
     $id = (int)$db->lastInsertId();

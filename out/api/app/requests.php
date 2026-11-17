@@ -35,7 +35,7 @@ try {
     elseif (in_array($durum, STATUSES, true)) { $where[] = 'status = ?'; $args[] = $durum; }
     if (in_array($tur, KINDS, true)) { $where[] = 'kind = ?'; $args[] = $tur; }
 
-    $q = $db->prepare('SELECT id, created_at, kind, service, service_title, res_date, res_time, guests, name, phone, note, job_type, boat, location,
+    $q = $db->prepare('SELECT id, created_at, kind, service, service_title, res_date, res_time, guests, hours, pier, extras, name, phone, note, job_type, boat, location,
         status, payment_status, amount, admin_note, lang FROM requests'
         . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
         . " ORDER BY (status = 'yeni') DESC, created_at DESC LIMIT 300");
@@ -44,6 +44,7 @@ try {
     foreach ($items as &$r) {
         $r['id'] = (int)$r['id'];
         $r['guests'] = $r['guests'] === null ? null : (int)$r['guests'];
+        $r['hours'] = $r['hours'] === null ? null : (float)$r['hours'];
     }
     $counts = $db->query('SELECT status, COUNT(*) c FROM requests GROUP BY status')->fetchAll(PDO::FETCH_KEY_PAIR);
     $counts = array_map('intval', $counts);

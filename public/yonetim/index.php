@@ -103,8 +103,9 @@ foreach ($rows as $r) {
     $wa = preg_replace('/\D/', '', $r['phone']);
     if (strlen($wa) === 11 && $wa[0] === '0') $wa = '9' . $wa;
     if (strlen($wa) === 10) $wa = '90' . $wa;
-    $when = $r['res_date'] ? date('d.m.Y', strtotime($r['res_date'])) . ' ' . h($r['res_time']) . ($r['guests'] ? " · {$r['guests']} kişi" : '') : '';
-    $extra = array_filter([$r['job_type'], $r['boat'], $r['location']]);
+    $when = $r['res_date'] ? date('d.m.Y', strtotime($r['res_date'])) . ' ' . h($r['res_time']) . ($r['guests'] ? " · {$r['guests']} kişi" : '')
+        . (($r['hours'] ?? null) ? ' · ' . rtrim(rtrim((string)$r['hours'], '0'), '.') . ' saat' : '') . (($r['pier'] ?? null) ? ' · 📍 ' . h($r['pier']) : '') : '';
+    $extra = array_filter([$r['job_type'], $r['boat'], $r['location'], ($r['extras'] ?? null) ? 'Ekler: ' . $r['extras'] : null]);
     $html .= '<article id="t' . $r['id'] . '" class="st-' . h($r['status']) . '">'
         . '<div class="top"><span class="tag">' . h($KIND[$r['kind']] ?? $r['kind']) . '</span>'
         . (($r['lang'] ?? 'tr') !== 'tr' ? ' <span class="tag lang">' . h(strtoupper($r['lang'])) . '</span>' : '') . ' <b>' . h($r['service_title'] ?: $r['service']) . '</b>'

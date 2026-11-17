@@ -9,7 +9,7 @@ type Dict = {
   intro: { title: string; text: string[] };
   faq: { title: string; items: [string, string][] };
   categories: { kiralama: string; tur: string; bakim: string };
-  card: { pickDate: string; leaveRequest: string; priceFrom: (n: string) => string; askPrice: string };
+  card: { pickDate: string; leaveRequest: string; priceFrom: (n: string) => string; askPrice: string; perHour: string };
   page: { duration: string; people: string; price: string; includes: string; seeAlso: string; home: string };
   booking: {
     pickDate: string; describeJob: string; callMe: string; callIntro: string;
@@ -20,16 +20,18 @@ type Dict = {
     noPayment: string; footnote: [string, string, string];
     summary: (title: string, date: string, time: string, n: number) => string;
     peopleLess: string; peopleMore: string;
+    duration: string; pier: string; extras: string; extrasNote: string;
     doneCallTitle: string; doneCallText: string;
     doneResTitle: string; doneResText: (when: string) => string;
     doneServiceText: string;
   };
   errors: { name: string; phone: string; date: string; time: string; check: string; rate: string; server: string; network: (p: string) => string };
   calendar: { prev: string; next: string };
-  footer: { contact: string; info: string; privacy: string; tagline: string };
+  footer: { contact: string; info: string; privacy: string; policy: string; tagline: string };
   wa: { hello: string; rent: string; float: string };
   meta: { title: string; description: string };
   privacy: { title: string; body: string[] };
+  policy: { title: string; description: string; body: [string, string][] };
 };
 
 export const ui: Record<Locale, Dict> = {
@@ -61,7 +63,7 @@ export const ui: Record<Locale, Dict> = {
       ],
     },
     categories: { kiralama: "Kiralama", tur: "Özel turlar", bakim: "Bakım ve usta" },
-    card: { pickDate: "Tarih seç →", leaveRequest: "Talep bırak →", priceFrom: (n) => `${n} TL'den başlayan`, askPrice: "Fiyat için sorun" },
+    card: { pickDate: "Tarih seç →", leaveRequest: "Talep bırak →", priceFrom: (n) => `${n} TL'den başlayan`, askPrice: "Fiyat için sorun", perHour: "/ saat" },
     page: { duration: "Süre", people: "Kişi", price: "Fiyat", includes: "Neler var?", seeAlso: "Bunlara da bakın", home: "Ana sayfa" },
     booking: {
       pickDate: "Tarih seç", describeJob: "İşi anlat", callMe: "Beni arayın", callIntro: "Sadece adınızı ve numaranızı bırakın, sizi arayalım.",
@@ -73,6 +75,7 @@ export const ui: Record<Locale, Dict> = {
       footnote: ["Gönder'e basarak ", "KVKK aydınlatma metnini", " okuduğunuzu kabul edersiniz."],
       summary: (t, d, h, n) => `${t}: ${d}, saat ${h}, ${n} kişi`,
       peopleLess: "Azalt", peopleMore: "Artır",
+      duration: "Süre", pier: "Kalkış noktası", extras: "Ek hizmetler (isteğe bağlı)", extrasNote: "Ek hizmetlerin fiyatı onaydan önce size ayrıca bildirilir.",
       doneCallTitle: "Teşekkürler!", doneCallText: "Numaranızı aldık, en kısa sürede sizi arayacağız.",
       doneResTitle: "Talebiniz alındı!", doneResText: (w) => `${w} için uygunluğu kontrol edip sizi arayacağız. Ödeme ve detaylar telefonda netleşecek.`,
       doneServiceText: "İşinize uygun ustayla görüşüp size fiyat ve tarih için döneceğiz.",
@@ -83,7 +86,7 @@ export const ui: Record<Locale, Dict> = {
       network: (p) => `Bağlantı kurulamadı. Lütfen ${p} numarasını arayın.`,
     },
     calendar: { prev: "Önceki ay", next: "Sonraki ay" },
-    footer: { contact: "İletişim", info: "Bilgi", privacy: "KVKK aydınlatma metni", tagline: "Boğaz'da tekne kiralama, turlar ve tekne bakımı" },
+    footer: { contact: "İletişim", info: "Bilgi", privacy: "KVKK aydınlatma metni", policy: "İptal ve değişiklik koşulları", tagline: "Boğaz'da tekne kiralama, turlar ve tekne bakımı" },
     wa: { hello: "Merhaba, tekne.istanbul sitesinden yazıyorum.", rent: "Merhaba, tekne kiralamak istiyorum.", float: "WhatsApp ile yazın" },
     meta: {
       title: "İstanbul Tekne Kiralama, Yat Kiralama ve Boğaz Turları | tekne.istanbul",
@@ -95,6 +98,17 @@ export const ui: Record<Locale, Dict> = {
         "tekne.istanbul olarak, sitemizdeki formlar aracılığıyla bize ilettiğiniz ad, telefon numarası, rezervasyon tarihi ve notlarınızı yalnızca talebinize dönüş yapmak, rezervasyonunuzu planlamak ve sizinle iletişim kurmak amacıyla işliyoruz.",
         "Bu veriler 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 5. maddesinde yer alan \"bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması\" hukuki sebebine dayanılarak işlenir. Talebinizi yerine getirmek için gerekli olduğu ölçüde hizmeti verecek tekne sahibi veya usta ile paylaşılabilir; başka amaçla üçüncü kişilere aktarılmaz.",
         "Verileriniz talebinizin sonuçlanmasından itibaren en fazla 2 yıl saklanır, ardından silinir. Kanun'un 11. maddesi kapsamındaki haklarınızı kullanmak (verilerinize erişme, düzeltme, silme vb.) için {email} adresine yazabilirsiniz.",
+      ],
+    },
+    policy: {
+      title: "İptal ve değişiklik koşulları",
+      description: "tekne.istanbul rezervasyon talepleri için iptal, tarih değişikliği, hava koşulları ve ek hizmet kuralları.",
+      body: [
+        ["Talep ön rezervasyondur", "Sitede ya da uygulamada bıraktığınız talep için ödeme alınmaz. Uygunluğu teyit edip sizi ararız; o aşamaya kadar talebinizi ücretsiz iptal edebilir ya da değiştirebilirsiniz. Bunun için bizi aramanız veya WhatsApp'tan yazmanız yeterli."],
+        ["Ödeme ve kapora", "Rezervasyon onaylandığında, varsa kapora tutarı, ödeme şekli ve iptal halinde iade koşulları ödeme yapmadan önce size yazılı olarak (WhatsApp veya e-posta) bildirilir. Bu koşulları kabul etmeden ödeme istenmez."],
+        ["Hava koşulları", "Rüzgâr, dalga veya yağış nedeniyle tur kaptanın değerlendirmesine göre güvenli değilse sizinle birlikte ücretsiz yeni bir tarih belirlenir; yeni tarih uymazsa ödediğiniz tutar iade edilir."],
+        ["Fiyata dahil olanlar ve ek hizmetler", "Her hizmette neyin dahil olduğu hizmet sayfasında yazar. Süsleme, pasta, yemek, fotoğrafçı, müzik ve transfer gibi ek hizmetler ayrıca fiyatlandırılır ve onaydan önce size bildirilir."],
+        ["Tarih ve saat değişikliği", "Onaylanmış bir rezervasyonun tarihini veya saatini değiştirmek isterseniz bize mümkün olduğunca erken haber verin; tekne müsaitse ek ücret olmadan değiştiririz."],
       ],
     },
   },
@@ -127,7 +141,7 @@ export const ui: Record<Locale, Dict> = {
       ],
     },
     categories: { kiralama: "Rentals", tur: "Private tours", bakim: "Maintenance" },
-    card: { pickDate: "Pick a date →", leaveRequest: "Send a request →", priceFrom: (n) => `From ${n} TRY`, askPrice: "Ask for a price" },
+    card: { pickDate: "Pick a date →", leaveRequest: "Send a request →", priceFrom: (n) => `From ${n} TRY`, askPrice: "Ask for a price", perHour: "/ hour" },
     page: { duration: "Duration", people: "Guests", price: "Price", includes: "What's included", seeAlso: "You may also like", home: "Home" },
     booking: {
       pickDate: "Pick a date", describeJob: "Describe the job", callMe: "Call me back", callIntro: "Just leave your name and number and we'll call you.",
@@ -139,6 +153,7 @@ export const ui: Record<Locale, Dict> = {
       footnote: ["By sending you confirm you have read the ", "privacy notice", "."],
       summary: (t, d, h, n) => `${t}: ${d}, ${h}, ${n} ${n === 1 ? "guest" : "guests"}`,
       peopleLess: "Fewer", peopleMore: "More",
+      duration: "Duration", pier: "Departure point", extras: "Extras (optional)", extrasNote: "Prices for extras are shared with you before confirmation.",
       doneCallTitle: "Thank you!", doneCallText: "We've got your number and will call you shortly.",
       doneResTitle: "Request received!", doneResText: (w) => `We'll check availability for ${w} and call you. Payment and details will be agreed by phone.`,
       doneServiceText: "We'll talk to the right technician and get back to you with a price and date.",
@@ -149,7 +164,7 @@ export const ui: Record<Locale, Dict> = {
       network: (p) => `Connection failed. Please call ${p}.`,
     },
     calendar: { prev: "Previous month", next: "Next month" },
-    footer: { contact: "Contact", info: "Info", privacy: "Privacy notice", tagline: "Boat rental, tours and boat maintenance on the Bosphorus" },
+    footer: { contact: "Contact", info: "Info", privacy: "Privacy notice", policy: "Cancellation policy", tagline: "Boat rental, tours and boat maintenance on the Bosphorus" },
     wa: { hello: "Hello, I'm writing from the tekne.istanbul website.", rent: "Hello, I'd like to rent a boat.", float: "Message us on WhatsApp" },
     meta: {
       title: "Istanbul Boat Rental, Yacht Charter and Bosphorus Tours | tekne.istanbul",
@@ -161,6 +176,17 @@ export const ui: Record<Locale, Dict> = {
         "tekne.istanbul processes the name, phone number, booking date and notes you send through the forms on this site only to respond to your request, plan your booking and contact you.",
         "This data is processed under Article 5 of the Turkish Personal Data Protection Law No. 6698 (KVKK), as it is directly related to the conclusion or performance of a contract. It may be shared with the boat owner or technician providing the service only as far as needed to fulfil your request, and is not transferred to third parties for any other purpose.",
         "Your data is kept for up to 2 years after your request is completed and then deleted. To exercise your rights (access, correction, deletion, etc.) write to {email}.",
+      ],
+    },
+    policy: {
+      title: "Cancellation and change policy",
+      description: "Cancellation, date changes, weather and extras rules for tekne.istanbul booking requests.",
+      body: [
+        ["A request is a pre-booking", "No payment is taken for the request you send on the website or app. We confirm availability and call you; until then you can cancel or change your request free of charge by calling us or writing on WhatsApp."],
+        ["Payment and deposit", "When your booking is confirmed, any deposit amount, the payment method and the refund terms in case of cancellation are sent to you in writing (WhatsApp or email) before you pay. No payment is requested until you accept these terms."],
+        ["Weather", "If wind, waves or rain make the trip unsafe in the captain's judgement, we set a new date with you free of charge; if no new date suits you, the amount you paid is refunded."],
+        ["What's included and extras", "Each service page lists what is included. Extras such as decoration, cake, food, photographer, music and transfer are priced separately and shared with you before confirmation."],
+        ["Date and time changes", "If you want to change the date or time of a confirmed booking, let us know as early as possible; if the boat is available we change it at no extra cost."],
       ],
     },
   },
@@ -193,7 +219,7 @@ export const ui: Record<Locale, Dict> = {
       ],
     },
     categories: { kiralama: "التأجير", tur: "جولات خاصة", bakim: "الصيانة" },
-    card: { pickDate: "← اختر موعداً", leaveRequest: "← أرسل طلباً", priceFrom: (n) => `ابتداءً من ${n} ليرة`, askPrice: "اسأل عن السعر" },
+    card: { pickDate: "← اختر موعداً", leaveRequest: "← أرسل طلباً", priceFrom: (n) => `ابتداءً من ${n} ليرة`, askPrice: "اسأل عن السعر", perHour: "/ ساعة" },
     page: { duration: "المدة", people: "الأشخاص", price: "السعر", includes: "ماذا يشمل؟", seeAlso: "قد يعجبك أيضاً", home: "الرئيسية" },
     booking: {
       pickDate: "اختر موعداً", describeJob: "صف العمل", callMe: "اتصلوا بي", callIntro: "فقط اترك اسمك ورقمك وسنتصل بك.",
@@ -205,6 +231,7 @@ export const ui: Record<Locale, Dict> = {
       footnote: ["بالإرسال تؤكد أنك قرأت ", "إشعار الخصوصية", "."],
       summary: (t, d, h, n) => `${t}: ${d}، الساعة ${h}، ${n} أشخاص`,
       peopleLess: "أقل", peopleMore: "أكثر",
+      duration: "المدة", pier: "نقطة الانطلاق", extras: "خدمات إضافية (اختياري)", extrasNote: "نبلغك بأسعار الخدمات الإضافية قبل التأكيد.",
       doneCallTitle: "شكراً لك!", doneCallText: "وصلنا رقمك وسنتصل بك قريباً.",
       doneResTitle: "تم استلام طلبك!", doneResText: (w) => `سنتحقق من التوفر في ${w} ونتصل بك. يتم الاتفاق على الدفع والتفاصيل عبر الهاتف.`,
       doneServiceText: "سنتحدث مع الفني المناسب ونعود إليك بالسعر والموعد.",
@@ -215,7 +242,7 @@ export const ui: Record<Locale, Dict> = {
       network: (p) => `تعذر الاتصال. يرجى الاتصال على ${p}.`,
     },
     calendar: { prev: "الشهر السابق", next: "الشهر التالي" },
-    footer: { contact: "التواصل", info: "معلومات", privacy: "إشعار الخصوصية", tagline: "تأجير القوارب والجولات وصيانة القوارب في البوسفور" },
+    footer: { contact: "التواصل", info: "معلومات", privacy: "إشعار الخصوصية", policy: "سياسة الإلغاء", tagline: "تأجير القوارب والجولات وصيانة القوارب في البوسفور" },
     wa: { hello: "مرحباً، أكتب إليكم من موقع tekne.istanbul.", rent: "مرحباً، أرغب في استئجار قارب.", float: "راسلنا على واتساب" },
     meta: {
       title: "تأجير القوارب واليخوت وجولات البوسفور في إسطنبول | tekne.istanbul",
@@ -227,6 +254,17 @@ export const ui: Record<Locale, Dict> = {
         "يعالج tekne.istanbul الاسم ورقم الهاتف وتاريخ الحجز والملاحظات التي ترسلها عبر نماذج الموقع فقط للرد على طلبك وتنظيم حجزك والتواصل معك.",
         "تتم معالجة هذه البيانات وفق المادة 5 من قانون حماية البيانات الشخصية التركي رقم 6698 لكونها مرتبطة مباشرة بإبرام العقد أو تنفيذه. وقد تتم مشاركتها مع مالك القارب أو الفني مقدم الخدمة بالقدر اللازم لتنفيذ طلبك فقط، ولا تُنقل إلى أطراف ثالثة لأي غرض آخر.",
         "تُحفظ بياناتك لمدة أقصاها سنتان بعد انتهاء طلبك ثم تُحذف. لممارسة حقوقك (الاطلاع، التصحيح، الحذف وغيرها) راسلنا على {email}.",
+      ],
+    },
+    policy: {
+      title: "سياسة الإلغاء والتغيير",
+      description: "قواعد الإلغاء وتغيير الموعد والطقس والخدمات الإضافية لطلبات الحجز في tekne.istanbul.",
+      body: [
+        ["الطلب حجز مبدئي", "لا يتم الدفع عند إرسال الطلب عبر الموقع أو التطبيق. نتأكد من التوفر ونتصل بك، وحتى ذلك الحين يمكنك إلغاء طلبك أو تغييره مجاناً بالاتصال بنا أو مراسلتنا على واتساب."],
+        ["الدفع والعربون", "عند تأكيد الحجز نرسل إليك كتابياً (واتساب أو بريد إلكتروني) قيمة العربون إن وجد وطريقة الدفع وشروط الاسترداد في حال الإلغاء، وذلك قبل الدفع. لا نطلب أي دفعة قبل موافقتك على هذه الشروط."],
+        ["الطقس", "إذا رأى القبطان أن الرياح أو الأمواج أو الأمطار تجعل الرحلة غير آمنة، نحدد معك موعداً جديداً مجاناً؛ وإذا لم يناسبك موعد جديد نعيد إليك المبلغ المدفوع."],
+        ["ما يشمله السعر والخدمات الإضافية", "توضح صفحة كل خدمة ما هو مشمول. الخدمات الإضافية مثل الزينة والكعكة والطعام والمصور والموسيقى والنقل تُسعّر بشكل منفصل ونبلغك بها قبل التأكيد."],
+        ["تغيير الموعد", "إذا أردت تغيير تاريخ أو ساعة حجز مؤكد فأبلغنا في أقرب وقت؛ إذا كان القارب متاحاً نغيره دون تكلفة إضافية."],
       ],
     },
   },
@@ -259,7 +297,7 @@ export const ui: Record<Locale, Dict> = {
       ],
     },
     categories: { kiralama: "Locations", tur: "Croisières privées", bakim: "Entretien" },
-    card: { pickDate: "Choisir une date →", leaveRequest: "Envoyer une demande →", priceFrom: (n) => `À partir de ${n} TRY`, askPrice: "Prix sur demande" },
+    card: { pickDate: "Choisir une date →", leaveRequest: "Envoyer une demande →", priceFrom: (n) => `À partir de ${n} TRY`, askPrice: "Prix sur demande", perHour: "/ heure" },
     page: { duration: "Durée", people: "Personnes", price: "Prix", includes: "Ce qui est inclus", seeAlso: "À découvrir aussi", home: "Accueil" },
     booking: {
       pickDate: "Choisir une date", describeJob: "Décrire le travail", callMe: "Rappelez-moi", callIntro: "Laissez simplement votre nom et votre numéro, nous vous rappelons.",
@@ -271,6 +309,7 @@ export const ui: Record<Locale, Dict> = {
       footnote: ["En envoyant, vous confirmez avoir lu la ", "politique de confidentialité", "."],
       summary: (t, d, h, n) => `${t} : ${d}, ${h}, ${n} ${n > 1 ? "personnes" : "personne"}`,
       peopleLess: "Moins", peopleMore: "Plus",
+      duration: "Durée", pier: "Point de départ", extras: "Options (facultatif)", extrasNote: "Le prix des options vous est communiqué avant confirmation.",
       doneCallTitle: "Merci !", doneCallText: "Nous avons bien reçu votre numéro et vous appellerons très vite.",
       doneResTitle: "Demande reçue !", doneResText: (w) => `Nous vérifions la disponibilité pour le ${w} et vous appelons. Le paiement et les détails seront réglés par téléphone.`,
       doneServiceText: "Nous contactons le bon technicien et revenons vers vous avec un prix et une date.",
@@ -281,7 +320,7 @@ export const ui: Record<Locale, Dict> = {
       network: (p) => `Connexion impossible. Appelez le ${p}.`,
     },
     calendar: { prev: "Mois précédent", next: "Mois suivant" },
-    footer: { contact: "Contact", info: "Infos", privacy: "Politique de confidentialité", tagline: "Location de bateaux, croisières et entretien sur le Bosphore" },
+    footer: { contact: "Contact", info: "Infos", privacy: "Politique de confidentialité", policy: "Conditions d'annulation", tagline: "Location de bateaux, croisières et entretien sur le Bosphore" },
     wa: { hello: "Bonjour, je vous écris depuis le site tekne.istanbul.", rent: "Bonjour, je souhaite louer un bateau.", float: "Écrivez-nous sur WhatsApp" },
     meta: {
       title: "Location de bateau et yacht à Istanbul, croisières sur le Bosphore | tekne.istanbul",
@@ -293,6 +332,17 @@ export const ui: Record<Locale, Dict> = {
         "tekne.istanbul traite le nom, le numéro de téléphone, la date de réservation et les notes envoyés via les formulaires du site uniquement pour répondre à votre demande, organiser votre réservation et vous contacter.",
         "Ces données sont traitées sur la base de l'article 5 de la loi turque n° 6698 sur la protection des données personnelles (KVKK), car elles sont directement liées à la conclusion ou à l'exécution d'un contrat. Elles peuvent être partagées avec le propriétaire du bateau ou le technicien dans la mesure nécessaire, et ne sont transmises à aucun tiers à d'autres fins.",
         "Vos données sont conservées au maximum 2 ans après la fin de votre demande, puis supprimées. Pour exercer vos droits (accès, rectification, suppression, etc.), écrivez à {email}.",
+      ],
+    },
+    policy: {
+      title: "Conditions d'annulation et de modification",
+      description: "Règles d'annulation, de changement de date, de météo et d'options pour les demandes de réservation tekne.istanbul.",
+      body: [
+        ["La demande est une pré-réservation", "Aucun paiement n'est pris pour la demande envoyée sur le site ou l'application. Nous confirmons la disponibilité et vous appelons ; d'ici là, vous pouvez annuler ou modifier gratuitement en nous appelant ou sur WhatsApp."],
+        ["Paiement et acompte", "Une fois la réservation confirmée, le montant de l'acompte éventuel, le mode de paiement et les conditions de remboursement en cas d'annulation vous sont envoyés par écrit (WhatsApp ou e-mail) avant tout paiement. Aucun paiement n'est demandé avant votre accord."],
+        ["Météo", "Si le vent, les vagues ou la pluie rendent la sortie dangereuse selon le capitaine, nous fixons gratuitement une nouvelle date avec vous ; si aucune date ne vous convient, le montant payé est remboursé."],
+        ["Ce qui est inclus et options", "Chaque page de service indique ce qui est inclus. Les options comme la décoration, le gâteau, le repas, le photographe, la musique et le transfert sont facturées à part et communiquées avant confirmation."],
+        ["Changement de date ou d'heure", "Pour modifier la date ou l'heure d'une réservation confirmée, prévenez-nous le plus tôt possible ; si le bateau est disponible, la modification est gratuite."],
       ],
     },
   },
@@ -325,7 +375,7 @@ export const ui: Record<Locale, Dict> = {
       ],
     },
     categories: { kiralama: "Noleggi", tur: "Tour privati", bakim: "Manutenzione" },
-    card: { pickDate: "Scegli la data →", leaveRequest: "Invia richiesta →", priceFrom: (n) => `Da ${n} TRY`, askPrice: "Prezzo su richiesta" },
+    card: { pickDate: "Scegli la data →", leaveRequest: "Invia richiesta →", priceFrom: (n) => `Da ${n} TRY`, askPrice: "Prezzo su richiesta", perHour: "/ ora" },
     page: { duration: "Durata", people: "Persone", price: "Prezzo", includes: "Cosa è incluso", seeAlso: "Potrebbe interessarti anche", home: "Home" },
     booking: {
       pickDate: "Scegli la data", describeJob: "Descrivi il lavoro", callMe: "Richiamatemi", callIntro: "Lascia solo nome e numero, ti richiamiamo noi.",
@@ -337,6 +387,7 @@ export const ui: Record<Locale, Dict> = {
       footnote: ["Inviando confermi di aver letto l'", "informativa sulla privacy", "."],
       summary: (t, d, h, n) => `${t}: ${d}, ore ${h}, ${n} ${n === 1 ? "persona" : "persone"}`,
       peopleLess: "Meno", peopleMore: "Più",
+      duration: "Durata", pier: "Punto di partenza", extras: "Servizi extra (facoltativi)", extrasNote: "Il prezzo degli extra ti viene comunicato prima della conferma.",
       doneCallTitle: "Grazie!", doneCallText: "Abbiamo ricevuto il tuo numero e ti chiameremo a breve.",
       doneResTitle: "Richiesta ricevuta!", doneResText: (w) => `Verifichiamo la disponibilità per ${w} e ti chiamiamo. Pagamento e dettagli verranno concordati al telefono.`,
       doneServiceText: "Parliamo con il tecnico giusto e ti ricontattiamo con prezzo e data.",
@@ -347,7 +398,7 @@ export const ui: Record<Locale, Dict> = {
       network: (p) => `Connessione non riuscita. Chiama il ${p}.`,
     },
     calendar: { prev: "Mese precedente", next: "Mese successivo" },
-    footer: { contact: "Contatti", info: "Info", privacy: "Informativa sulla privacy", tagline: "Noleggio barche, tour e manutenzione sul Bosforo" },
+    footer: { contact: "Contatti", info: "Info", privacy: "Informativa sulla privacy", policy: "Condizioni di cancellazione", tagline: "Noleggio barche, tour e manutenzione sul Bosforo" },
     wa: { hello: "Ciao, vi scrivo dal sito tekne.istanbul.", rent: "Ciao, vorrei noleggiare una barca.", float: "Scrivici su WhatsApp" },
     meta: {
       title: "Noleggio barche e yacht a Istanbul, tour sul Bosforo | tekne.istanbul",
@@ -359,6 +410,17 @@ export const ui: Record<Locale, Dict> = {
         "tekne.istanbul tratta nome, numero di telefono, data di prenotazione e note inviati tramite i moduli del sito solo per rispondere alla tua richiesta, organizzare la prenotazione e contattarti.",
         "I dati sono trattati ai sensi dell'articolo 5 della legge turca n. 6698 sulla protezione dei dati personali (KVKK), in quanto direttamente collegati alla conclusione o esecuzione di un contratto. Possono essere condivisi con il proprietario della barca o il tecnico solo nella misura necessaria e non sono ceduti a terzi per altri scopi.",
         "I dati sono conservati al massimo 2 anni dalla conclusione della richiesta e poi cancellati. Per esercitare i tuoi diritti (accesso, rettifica, cancellazione, ecc.) scrivi a {email}.",
+      ],
+    },
+    policy: {
+      title: "Condizioni di cancellazione e modifica",
+      description: "Regole di cancellazione, cambio data, meteo e servizi extra per le richieste di prenotazione tekne.istanbul.",
+      body: [
+        ["La richiesta è una pre-prenotazione", "Per la richiesta inviata dal sito o dall'app non si paga nulla. Verifichiamo la disponibilità e ti chiamiamo; fino ad allora puoi annullare o modificare gratuitamente chiamandoci o scrivendoci su WhatsApp."],
+        ["Pagamento e acconto", "Quando la prenotazione è confermata, l'eventuale acconto, il metodo di pagamento e le condizioni di rimborso in caso di cancellazione ti vengono inviati per iscritto (WhatsApp o e-mail) prima del pagamento. Nessun pagamento viene richiesto senza il tuo consenso."],
+        ["Meteo", "Se vento, onde o pioggia rendono l'uscita non sicura secondo il capitano, fissiamo con te una nuova data senza costi; se nessuna data ti va bene, l'importo pagato viene rimborsato."],
+        ["Cosa è incluso e servizi extra", "Ogni pagina di servizio indica cosa è incluso. Extra come decorazioni, torta, cibo, fotografo, musica e transfer hanno un prezzo a parte comunicato prima della conferma."],
+        ["Cambio di data o orario", "Se vuoi cambiare data o orario di una prenotazione confermata, avvisaci il prima possibile; se la barca è disponibile il cambio è gratuito."],
       ],
     },
   },

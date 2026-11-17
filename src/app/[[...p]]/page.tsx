@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { HomeView, homeMetadata } from "@/views/HomeView";
 import { ServiceView, serviceMetadata } from "@/views/ServiceView";
 import { PrivacyView, privacyMetadata } from "@/views/PrivacyView";
+import { PolicyView, policyMetadata } from "@/views/PolicyView";
 import { allPaths, resolve } from "./route-map";
 
 export const dynamicParams = false;
@@ -15,6 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!r) return {};
   if (r.view === "home") return homeMetadata(r.lang);
   if (r.view === "privacy") return privacyMetadata(r.lang);
+  if (r.view === "policy") return policyMetadata(r.lang);
   return serviceMetadata(r.lang, r.s);
 }
 
@@ -23,5 +25,6 @@ export default async function Page({ params }: Props) {
   if (!r) notFound();
   if (r.view === "home") return <HomeView lang={r.lang} />;
   if (r.view === "privacy") return <PrivacyView lang={r.lang} />;
+  if (r.view === "policy") return <PolicyView lang={r.lang} />;
   return <ServiceView lang={r.lang} s={r.s} />;
 }

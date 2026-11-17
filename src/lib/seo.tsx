@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import { home, locales, ogLocale, path, privacySlug, type Locale } from "@/i18n/locales";
+import { home, locales, ogLocale, path, policySlug, privacySlug, type Locale } from "@/i18n/locales";
 import { ui } from "@/i18n/ui";
 import { services, type Service } from "./services";
 import { site } from "./site";
 
 /** Sayfa anahtarı: ana sayfa, gizlilik ya da bir hizmetin id'si */
-export type PageKey = { kind: "home" } | { kind: "privacy" } | { kind: "service"; id: string };
+export type PageKey = { kind: "home" } | { kind: "privacy" } | { kind: "policy" } | { kind: "service"; id: string };
 
 export function pagePath(l: Locale, key: PageKey): string {
   if (key.kind === "home") return home(l);
   if (key.kind === "privacy") return path(l, privacySlug[l]);
+  if (key.kind === "policy") return path(l, policySlug[l]);
   const s = services.find((x) => x.id === key.id)!;
   return path(l, s.text[l].slug);
 }
