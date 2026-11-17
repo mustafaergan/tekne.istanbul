@@ -19,7 +19,7 @@ export function ServiceCard({ s, lang }: { s: Service; lang: Locale }) {
       <h3 className="mt-4 text-lg font-semibold">{tx.title}</h3>
       <p className="mt-1 flex-1 text-sm text-dim">{tx.short}</p>
       <div className="mt-4 flex items-center justify-between gap-3 text-sm">
-        <span className="font-medium text-ink">{price(lang, s.priceFrom)}</span>
+        <span className="font-medium text-ink">{price(lang, s.priceFrom, s.priceUnit)}</span>
         <span className="font-semibold text-sea-700 group-hover:underline">{s.booking === "takvim" ? t.pickDate : t.leaveRequest}</span>
       </div>
     </Link>

@@ -62,7 +62,7 @@ export function ServiceView({ lang, s }: { lang: Locale; s: Service }) {
             )}
             <div className="rounded-xl border border-line bg-white p-4">
               <dt className="text-dim">{t.page.price}</dt>
-              <dd className="mt-1 font-semibold">{price(lang, s.priceFrom)}</dd>
+              <dd className="mt-1 font-semibold">{price(lang, s.priceFrom, s.priceUnit)}</dd>
             </div>
           </dl>
           <h2 className="mt-10 text-xl font-semibold">{t.page.includes}</h2>

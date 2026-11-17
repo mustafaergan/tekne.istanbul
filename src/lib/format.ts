@@ -1,8 +1,8 @@
 import { intlLocale, type Locale } from "@/i18n/locales";
 import { ui } from "@/i18n/ui";
 
-export const price = (l: Locale, n?: number) =>
-  n ? ui[l].card.priceFrom(n.toLocaleString(intlLocale[l])) : ui[l].card.askPrice;
+export const price = (l: Locale, n?: number, unit?: "saat" | "paket" | "kisi") =>
+  n ? ui[l].card.priceFrom(n.toLocaleString(intlLocale[l])) + (unit === "saat" ? ` ${ui[l].card.perHour}` : "") : ui[l].card.askPrice;
 
 export const isoDate = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;

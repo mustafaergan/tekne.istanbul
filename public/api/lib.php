@@ -63,6 +63,9 @@ function tekne_db(): PDO
     if (!in_array('lang', $cols, true)) {
         $db->exec("ALTER TABLE requests ADD COLUMN lang CHAR(2) NOT NULL DEFAULT 'tr' AFTER admin_note");
     }
+    if (!in_array('hours', $cols, true)) {
+        $db->exec('ALTER TABLE requests ADD COLUMN hours DECIMAL(3,1) NULL AFTER guests, ADD COLUMN pier VARCHAR(40) NULL AFTER hours, ADD COLUMN extras VARCHAR(255) NULL AFTER pier');
+    }
     return $db;
 }
 
@@ -87,7 +90,8 @@ function tekne_push(PDO $db, int $id, array $r): void
     if (!$tokens) return;
     $kinds = ['rezervasyon' => 'Rezervasyon', 'geri-arama' => 'Geri arama', 'servis' => 'Bakım / usta'];
     $title = ($kinds[$r['kind']] ?? 'Talep') . ': ' . ($r['service_title'] ?: $r['service']);
-    $body = $r['name'] . ' · ' . $r['phone'] . ($r['res_date'] ? " · {$r['res_date']} {$r['res_time']}" : '');
+    $body = $r['name'] . ' · ' . $r['phone'] . ($r['res_date'] ? " · {$r['res_date']} {$r['res_time']}" : '')
+        . (!empty($r['hours']) ? " · {$r['hours']} sa" : '') . (!empty($r['pier']) ? " · {$r['pier']}" : '');
     $messages = array_map(static fn($t) => [
         'to' => $t, 'title' => $title, 'body' => $body, 'sound' => 'default',
         'channelId' => 'talepler', 'priority' => 'high', 'data' => ['id' => $id],
@@ -135,6 +139,9 @@ function tekne_notify(int $id, array $r): void
     ];
     if ($r['res_date']) $lines[] = "Tarih    : {$r['res_date']} {$r['res_time']}";
     if ($r['guests']) $lines[] = "Kişi     : {$r['guests']}";
+    if (!empty($r['hours'])) $lines[] = "Süre     : {$r['hours']} saat";
+    if (!empty($r['pier'])) $lines[] = "Kalkış   : {$r['pier']}";
+    if (!empty($r['extras'])) $lines[] = "Ekler    : {$r['extras']}";
     if ($r['job_type']) $lines[] = "İş türü  : {$r['job_type']}";
     if ($r['boat']) $lines[] = "Tekne    : {$r['boat']}";
     if ($r['location']) $lines[] = "Konum    : {$r['location']}";

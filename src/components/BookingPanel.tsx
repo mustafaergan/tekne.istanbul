@@ -8,6 +8,7 @@ import { longDate } from "@/lib/format";
 import { phoneFor } from "@/lib/site";
 import { path, privacySlug, type Locale } from "@/i18n/locales";
 import { ui } from "@/i18n/ui";
+import { anyPier, extras as extraLabels, hoursLabel, piers, type ExtraId } from "@/lib/options";
 
 type Kind = "rezervasyon" | "geri-arama" | "servis";
 type ErrKey = "name" | "phone" | "date" | "time";
@@ -127,12 +128,32 @@ function ReservationForm({ lang, s }: { lang: Locale; s: Service }) {
   const [date, setDate] = useState<string>();
   const [time, setTime] = useState<string>();
   const [guests, setGuests] = useState(2);
+  const [hours, setHours] = useState<number | undefined>(s.hours?.[0]);
+  const [pier, setPier] = useState("");
+  const [picked, setPicked] = useState<ExtraId[]>([]);
+  const toggle = (x: ExtraId) => setPicked((p) => (p.includes(x) ? p.filter((y) => y !== x) : [...p, x]));
+  const chip = (on: boolean) =>
+    `rounded-lg border px-3 py-2 text-sm font-medium transition ${on ? "border-sea-700 bg-sea-700 text-white" : "border-line bg-white hover:border-sea-500"}`;
 
   if (state.status === "done")
     return <Done title={t.doneResTitle} text={t.doneResText(`${date ? longDate(lang, date) : ""} ${time ?? ""}`.trim())} />;
 
   return (
-    <form onSubmit={(e) => submit(e, { date: date ?? "", time: time ?? "", guests: String(guests) })} className="space-y-5" noValidate>
+    <form
+      onSubmit={(e) =>
+        submit(e, {
+          date: date ?? "",
+          time: time ?? "",
+          guests: String(guests),
+          hours: hours ? String(hours) : "",
+          pier,
+          // yönetim Türkçe: ek hizmetler Türkçe adlarıyla gider
+          extras: picked.map((x) => extraLabels[x].tr).join(", "),
+        })
+      }
+      className="space-y-5"
+      noValidate
+    >
       <div>
         <div className="mb-2 text-sm font-semibold">{t.step1}</div>
         <Calendar lang={lang} value={date} onChange={setDate} />
@@ -172,8 +193,51 @@ function ReservationForm({ lang, s }: { lang: Locale; s: Service }) {
               </button>
             </div>
           </div>
+          {s.hours && (
+            <div>
+              <div className="mb-2 text-sm font-semibold">{t.duration}</div>
+              <div className="flex flex-wrap gap-2">
+                {s.hours.map((h) => (
+                  <button key={h} type="button" onClick={() => setHours(h)} className={chip(hours === h)} aria-pressed={hours === h}>
+                    {hoursLabel(lang, h)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {s.pier && (
+            <div>
+              <label className="mb-2 block text-sm font-semibold" htmlFor="pier">
+                {t.pier}
+              </label>
+              <select id="pier" className="field" value={pier} onChange={(e) => setPier(e.target.value)}>
+                <option value="">{anyPier[lang]}</option>
+                {piers.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          {s.extras && (
+            <div>
+              <div className="mb-2 text-sm font-semibold">{t.extras}</div>
+              <div className="flex flex-wrap gap-2">
+                {s.extras.map((x) => (
+                  <button key={x} type="button" onClick={() => toggle(x)} className={chip(picked.includes(x))} aria-pressed={picked.includes(x)}>
+                    {picked.includes(x) ? "✓ " : "+ "}
+                    {extraLabels[x][lang]}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-dim">{t.extrasNote}</p>
+            </div>
+          )}
           <div className="rounded-xl bg-sea-100 px-4 py-3 text-sm text-sea-800">
             {t.summary(s.text[lang].title, longDate(lang, date), time, guests)}
+            {hours ? ` · ${hoursLabel(lang, hours)}` : ""}
+            {pier ? ` · ${pier}` : ""}
           </div>
           <div className="space-y-4">
             <div className="text-sm font-semibold">{t.step4}</div>

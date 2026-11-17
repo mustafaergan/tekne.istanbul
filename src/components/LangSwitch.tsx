@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { home, isLocale, localeNames, locales, path, privacySlug, type Locale } from "@/i18n/locales";
+import { home, isLocale, localeNames, locales, path, policySlug, privacySlug, type Locale } from "@/i18n/locales";
 import { services } from "@/lib/services";
 
 /** Şu anki sayfanın diğer dillerdeki karşılığı */
@@ -12,6 +12,7 @@ function counterpart(pathname: string, to: Locale): string {
   const slug = from === "tr" ? parts[0] : parts[1];
   if (!slug) return home(to);
   if (slug === privacySlug[from]) return path(to, privacySlug[to]);
+  if (slug === policySlug[from]) return path(to, policySlug[to]);
   const s = services.find((x) => x.text[from].slug === slug);
   return s ? path(to, s.text[to].slug) : home(to);
 }

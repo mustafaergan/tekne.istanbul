@@ -2,7 +2,7 @@ import Link from "next/link";
 import { phoneFor, site, waLink } from "@/lib/site";
 import { WaIcon } from "./Icon";
 import { LangSwitch } from "./LangSwitch";
-import { dir, home, path, privacySlug, type Locale } from "@/i18n/locales";
+import { dir, home, path, policySlug, privacySlug, type Locale } from "@/i18n/locales";
 import { ui } from "@/i18n/ui";
 import "@/app/globals.css";
 
@@ -61,6 +61,9 @@ export function Footer({ lang }: { lang: Locale }) {
         </div>
         <div className="space-y-1">
           <div className="font-semibold text-ink">{t.info}</div>
+          <Link className="block hover:text-ink" href={path(lang, policySlug[lang])}>
+            {t.policy}
+          </Link>
           <Link className="block hover:text-ink" href={path(lang, privacySlug[lang])}>
             {t.privacy}
           </Link>
