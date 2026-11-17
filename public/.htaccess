@@ -1,5 +1,9 @@
 RewriteEngine On
 
+# Mobil uygulama jetonu (Authorization başlığı) PHP'ye iletilsin
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 # Tek adres: https://tekne.istanbul (http ve www yönlendirilir; SSL doğrulaması için .well-known hariç)
 RewriteCond %{REQUEST_URI} !^/\.well-known/
 RewriteCond %{HTTPS} !=on [OR]
